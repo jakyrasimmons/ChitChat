@@ -1,26 +1,18 @@
-
-
-
-
-
-
-
-
-
-// Jakyra's Work Below ************************************************************************************************************************\
-
-const express = require("express"); //get rid of (use jesus's)
+const express = require('express');
+const app = express();
+const port = 8080;
 
 //import socket.io and http(http built into node)
 const { Server } = require("socket.io"); //keep when integrating
 const http = require("http"); //keep when integrating
 
-const app = express(); //get rid of (use jesus's)
 //creating http server and socket.io server
 const server = http.createServer(app); //using app here is where the connection happens
 const io = new Server(server);
 
-//jesus api (app.get(...))
+app.get('/', (req, res) => {
+	res.send('Hello Jakyra and Jesus!');
+});
 
 //when someone connects to server
 io.on("connection", (socket) => {
@@ -40,7 +32,6 @@ io.on("connection", (socket) => {
     });
 });
 
-//get rid of this test(use jesus's should say app.listen but we change to server.listen) 
-server.listen(3000, () => {
-    console.log("Server running on port 3000");
+server.listen(port, () => {
+	console.log(`Example app listening at http://localhost:${port}`);
 });
