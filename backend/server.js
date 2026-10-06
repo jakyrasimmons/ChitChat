@@ -14,7 +14,11 @@ const http = require("http"); //keep when integrating
 
 //creating http server and socket.io server
 const server = http.createServer(app); //using app here is where the connection happens
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173"
+    }
+});
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
