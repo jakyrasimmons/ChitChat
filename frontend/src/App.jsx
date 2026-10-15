@@ -19,7 +19,8 @@ function App() {
   
   //testing purposes
   console.log(messages)
-
+  console.log('Socket connected:', socket.connected)
+  
   //alistens for messages from the server
   useEffect(() => {
   socket.on('message', (data) => {
@@ -48,17 +49,12 @@ function App() {
 
   //whats displayed on the page (components)
   return (
-    <div>
-      {/* displays header */}
-      <Header />
-
-      {/* displays chat messages */}
-      <ChatMessages messages={messages} />
-
-      {/* textbox and send button */}
-      <MessageInput sendMessage={sendMessage} />
-    </div>
-  )
+  <div className="chat-container">
+    <Header />
+    <ChatMessages messages={messages} />
+    <MessageInput sendMessage={sendMessage} />
+  </div>
+)
 }
 //availale to other files
 export default App
