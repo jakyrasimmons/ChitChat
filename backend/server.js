@@ -3,11 +3,6 @@ const app = express();
 const path = require('path');
 const port = 8080;
 
-//####
-//const cookieParser = require('cookie-parser')
-//app.use(cookieParser());
-//####
-
 //import socket.io and http(http built into node)
 const { Server } = require("socket.io"); //keep when integrating
 const http = require("http"); //keep when integrating
@@ -18,17 +13,11 @@ const io = new Server(server);
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+	res.cookie('sesh', 'john doe');
+	console.log('Cookie set');
 });
 
 //when someone connects to server
-
-//####
-//io.get("/private", (req, res) => {
-//	if (!req.cookies.token) return res.status(401).send();
-//	res.status(200).json({ secret: "Abe bday"});
-//});
-//####
-
 io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
 
