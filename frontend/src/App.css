@@ -182,3 +182,13 @@
     border-right-color: var(--border);
   }
 }
+
+/* stuff that Jakyra added to align the chat messages (dont remove please but you can change to better fit CSS needs!) */
+
+.self {
+  text-align: right;
+}
+
+.other {
+  text-align: left;
+}

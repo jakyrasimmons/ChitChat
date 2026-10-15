@@ -1,39 +1,13 @@
 <!doctype html>
 <html lang="en">
   <head>
-	<!-- Jesus wrote this; Connects us to socket.io --!>
-	<script src="https://cdn.socket.io/socket.io-3.0.1.min.js"> </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>ChitChat</title>
   </head>
   <body>
-	<!-- Jesus wrote this; Connects us to socket.io --!>
-	<script>
-		const port = 8080;
-		const socket = io('http://localhost:' + port)
-
-		socket.on('connection')
-		socket.on('message', (data) => {
-			document.querySelector("#otherMsg").innerHTML = data
-		})
-
-		const sendMsg = () => {
-			const msgIn = document.querySelector("#chat")
-			const message = msgIn.value
-			socket.emit('message', message)
-			document.querySelector("#selfMsg").innerHTML = message
-		}
-	</script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-<!-- Jesus wrote this; maybe delete later --!>
-	<div>
-		<input type="text" id="chat" placeholder="talk!">
-		<button onclick="sendMsg()"> <- send </button>
-		<h2 id="selfMsg">You haven't said anything...</h2>
-		<h1 id="otherMsg">No one else has talked yet...</h1>
-	</div>
 </html>
