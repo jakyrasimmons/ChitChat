@@ -15,11 +15,19 @@ const io = new Server(server, {
     }
 });
 
+const dt = new Date();
+console.log(dt.toLocaleString());
+console.log(timeStamp(dt));
+function timeStamp(dateObj) {
+    return `${dateObj.getFullYear()}${dateObj.getMonth()+1}${dateObj.getDate()}${dateObj.getHours()}${dateObj.getMinutes()}${dateObj.getSeconds()}`
+}
+
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-	res.cookie('sesh', 'john doe');
-	console.log('Cookie set');
+	cur = timeStamp(dt);
+    res.cookie('birth', `user${cur}`);
+	console.log(`Cookie set for user${cur}.`);
 });
+
 
 //when someone connects to server
 io.on("connection", (socket) => {
