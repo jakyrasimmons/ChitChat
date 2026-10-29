@@ -164,23 +164,33 @@
 .ticks {
   position: relative;
   width: 100%;
+  
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+/* Chat message box */
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.chat-box,
+.messages,
+.message-list,
+.chat-container main {
+  height: 400px;
+  overflow-y: auto;
+  padding: 15px;
+  background: #171717;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* Individual messages */
+
+.message {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  max-width: 75%;
+  width: fit-content;
+  overflow-wrap: anywhere;
 }
 
 /* stuff that Jakyra added to align the chat messages (dont remove please but you can change to better fit CSS needs!) */
@@ -191,4 +201,42 @@
 
 .other {
   text-align: left;
+}
+
+/* Display names above messages */
+
+.display-name {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.self .display-name {
+  color: #111111;
+}
+
+.other .display-name {
+  color: #ffe500;
+}
+
+/* Display name setup */
+
+.name-setup {
+  text-align: center;
+  padding: 20px;
+}
+
+.name-setup input {
+  padding: 10px;
+  margin: 10px;
+}
+
+.name-setup button {
+  background: #ffe500;
+  color: black;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

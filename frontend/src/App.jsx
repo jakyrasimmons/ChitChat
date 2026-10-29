@@ -1,4 +1,5 @@
-//remeber data that can change (messages)
+
+ //remember data that can change (messages)
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 
@@ -13,52 +14,78 @@ const socket = io('http://localhost:8080')
 
 //holds app interface
 function App() {
-  
-  //store messages in the chat (replaces this: document.querySelector("#otherMsg").innerHTML = data)
+
+  //store messages in the chat
   const [messages, setMessages] = useState([])
-  
+
+  //store user's display name
+  const [displayName, setDisplayName] = useState('')
+
+  //stores name typed in textbox
+  const [nameInput, setNameInput] = useState('')
+
   //testing purposes
   console.log(messages)
-
+  console.log('Socket connected:', socket.connected)
+  
   //alistens for messages from the server
   useEffect(() => {
-  socket.on('message', (data) => {
-    //add new messages (data) to end of the list (sender: 'other' distinguishes between sender and receiver on computer)
-    setMessages((previousMessages) => [
-    ...previousMessages,
-    { text: data, sender: 'other' }
-    ])
-  })
+    const handleMessage = (data) => {
 
-  return () => {
-    socket.off('message')
-  }
+      //add new messages to end of list
+      setMessages((previousMessages) => [
+        ...previousMessages,
+        {
+          text: data.text,
+          displayName: data.displayName,
+          sender: 'other'
+        }
+      ])
+    }
+
+    socket.on('message', handleMessage)
+
+    return () => {
+      socket.off('message', handleMessage)
+    }
   }, [])
 
-  //replaces this: socket.emit('message', message)
-  const sendMessage = (message) => {
-    socket.emit('message', message)
+  //save display name
+  const saveDisplayName = () => {
+    if (!nameInput.trim()) return
 
-    //add new messages (message) to end of the list (sender: 'self' distinguishes between sender and receiver on computer)
+    setDisplayName(nameInput.trim())
+  }
+
+  //send message with display name
+  const sendMessage = (message) => {
+
+    const newMessage = {
+      text: message,
+      displayName: displayName
+    }
+
+    socket.emit('message', newMessage)
+
+    //add sent message to chat
     setMessages((previousMessages) => [
-    ...previousMessages,
-    { text: message, sender: 'self' }
+      ...previousMessages,
+      {
+        ...newMessage,
+        sender: 'self'
+      }
     ])
   }
 
   //whats displayed on the page (components)
   return (
-    <div>
-      {/* displays header */}
-      <Header />
-
-      {/* displays chat messages */}
-      <ChatMessages messages={messages} />
-
-      {/* textbox and send button */}
-      <MessageInput sendMessage={sendMessage} />
-    </div>
-  )
+  <div className="chat-container">
+    <Header />
+    <ChatMessages messages={messages} />
+    <MessageInput sendMessage={sendMessage} />
+  </div>
+)
 }
-//availale to other files
+
+//available to other files
 export default App
