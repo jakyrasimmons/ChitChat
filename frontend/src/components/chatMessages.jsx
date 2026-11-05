@@ -1,9 +1,23 @@
-//passing the messgaes list from App.jsx
+
+ //passing the messages list from App.jsx
 function ChatMessages({ messages }) {
   return (
     <main>
       {messages.map((message, index) => (
-        <p key={index} className={message.sender}>{message.text}</p>
+        <div
+          key={index}
+          className={`message ${message.sender}`}
+        >
+
+          {/* shows display name above message */}
+          <strong className="display-name">
+            {message.displayName}
+          </strong>
+
+          {/* shows message text */}
+          <p>{message.text}</p>
+
+        </div>
       ))}
     </main>
   )

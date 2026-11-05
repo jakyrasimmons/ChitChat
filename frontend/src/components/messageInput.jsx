@@ -1,9 +1,14 @@
+
 import { useState } from 'react'
 
-function MessageInput( {sendMessage} ) {
-  
-    //stores whats typed in textbox
-    const [message, setMessage] = useState('')
+function MessageInput({ sendMessage }) {
+
+  //stores whats typed in textbox
+  const [message, setMessage] = useState('')
+
+  //if send button is clicked show message and clear textbox
+  const handleSend = () => {
+    if (!message.trim()) return
 
     //if send button is clcked show messgae and clear textbox
     const handleSend = () => {
