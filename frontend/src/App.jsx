@@ -77,6 +77,33 @@ function App() {
     ])
   }
 
+  //screen that users see when joining the chat
+  if (!displayName) {
+  return (
+    <div className="name-setup">
+      <h2>Welcome to ChitChat!</h2>
+
+      {/* asks for a name and sets nameInput variable to it*/}
+      <input
+        type="text"
+        placeholder="Enter your display name"
+        value={nameInput}
+        onChange={(e) => setNameInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            saveDisplayName()
+          }
+        }}
+      />
+
+      {/* when user clicks "join chat" button it saves the displayname*/}
+      <button onClick={saveDisplayName}>
+        Join Chat
+      </button>
+    </div>
+  )
+}
+
   //whats displayed on the page (components)
   return (
   <div className="chat-container">
