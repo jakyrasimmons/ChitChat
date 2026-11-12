@@ -7,37 +7,38 @@ function MessageInput({ sendMessage }) {
   const [message, setMessage] = useState('')
 
   //if send button is clicked show message and clear textbox
-  const handleSend = () => {
-    if (!message.trim()) return
+  // const handleSend = () => {
+  //     if (!message.trim()) return
 
-    //if send button is clcked show messgae and clear textbox
-    const handleSend = () => {
-      if (!message.trim()) return;
-        sendMessage(message);
-        setMessage('');
-    };
+      //if send button is clcked show messgae and clear textbox
+      const handleSend = () => {
+        if (!message.trim()) return;
+          sendMessage(message);
+          setMessage('');
+      };
 
-    const handleKeyDown = (e) => {
+      const handleKeyDown = (e) => {
 
-      if (e.key === 'Enter') {
-        handleSend();
-      }
-    };
-  
-    return (
-    <div>
-      {/* keeps track of whats being typed */}
-      <input 
-        type="text" 
-        placeholder="Type a message..." 
-        value={message} 
-        onChange={(e) => setMessage(e.target.value)} 
-        onKeyDown={handleKeyDown}
-      />
-      {/* makes send button work */}
-      <button onClick={handleSend} disabled={!message.trim()}>Send</button>
-    </div>
-  );
+        if (e.key === 'Enter') {
+          handleSend();
+        }
+      };
+    
+      return (
+      <div>
+        {/* keeps track of whats being typed */}
+        <input 
+          type="text" 
+          placeholder="Type a message..." 
+          value={message} 
+          onChange={(e) => setMessage(e.target.value)} 
+          onKeyDown={handleKeyDown}
+        />
+        {/* makes send button work */}
+        <button onClick={handleSend} disabled={!message.trim()}>Send</button>
+      </div>
+    );
+  //}
 }
 
 export default MessageInput

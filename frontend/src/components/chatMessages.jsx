@@ -2,7 +2,7 @@
  //passing the messages list from App.jsx
 function ChatMessages({ messages }) {
   return (
-    <main>
+    <main classname="messages">
       {messages.map((message, index) => (
         <div
           key={index}
