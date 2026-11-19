@@ -1,4 +1,5 @@
-//remeber data that can change (messages)
+
+ //remember data that can change (messages)
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 
@@ -25,8 +26,8 @@ function timeStamp(dateObj) {
 
 //holds app interface
 function App() {
-  
-  //store messages in the chat (replaces this: document.querySelector("#otherMsg").innerHTML = data)
+
+  //store messages in the chat
   const [messages, setMessages] = useState([])
 
   if (Cookies.get('birth') === undefined) {
@@ -41,6 +42,11 @@ function App() {
   else {
     console.log(`Cookie already exists for client.`);
   }
+  //store user's display name
+  const [displayName, setDisplayName] = useState('')
+
+  //stores name typed in textbox
+  const [nameInput, setNameInput] = useState('')
 
   //testing purposes
   console.log(messages)
@@ -48,29 +54,79 @@ function App() {
   
   //alistens for messages from the server
   useEffect(() => {
-  socket.on('message', (data) => {
-    //add new messages (data) to end of the list (sender: 'other' distinguishes between sender and receiver on computer)
-    setMessages((previousMessages) => [
-    ...previousMessages,
-    { text: data, sender: 'other' }
-    ])
-  })
+    const handleMessage = (data) => {
 
-  return () => {
-    socket.off('message')
-  }
+      //add new messages to end of list
+      setMessages((previousMessages) => [
+        ...previousMessages,
+        {
+          text: data.text,
+          displayName: data.displayName,
+          sender: 'other'
+        }
+      ])
+    }
+
+    socket.on('message', handleMessage)
+
+    return () => {
+      socket.off('message', handleMessage)
+    }
   }, [])
 
-  //replaces this: socket.emit('message', message)
-  const sendMessage = (message) => {
-    socket.emit('message', message)
+  //save display name
+  const saveDisplayName = () => {
+    if (!nameInput.trim()) return
 
-    //add new messages (message) to end of the list (sender: 'self' distinguishes between sender and receiver on computer)
+    setDisplayName(nameInput.trim())
+  }
+
+  //send message with display name
+  const sendMessage = (message) => {
+
+    const newMessage = {
+      text: message,
+      displayName: displayName
+    }
+
+    socket.emit('message', newMessage)
+
+    //add sent message to chat
     setMessages((previousMessages) => [
-    ...previousMessages,
-    { text: message, sender: 'self' }
+      ...previousMessages,
+      {
+        ...newMessage,
+        sender: 'self'
+      }
     ])
   }
+
+  //screen that users see when joining the chat
+  if (!displayName) {
+  return (
+    <div className="name-setup">
+      <h2>Welcome to ChitChat!</h2>
+
+      {/* asks for a name and sets nameInput variable to it*/}
+      <input
+        type="text"
+        placeholder="Enter your display name"
+        value={nameInput}
+        onChange={(e) => setNameInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            saveDisplayName()
+          }
+        }}
+      />
+
+      {/* when user clicks "join chat" button it saves the displayname*/}
+      <button onClick={saveDisplayName}>
+        Join Chat
+      </button>
+    </div>
+  )
+}
 
   //whats displayed on the page (components)
   return (
@@ -81,5 +137,6 @@ function App() {
   </div>
 )
 }
-//availale to other files
+
+//available to other files
 export default App
