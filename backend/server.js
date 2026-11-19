@@ -16,6 +16,16 @@ const io = new Server(server, {
     }
 });
 
+//db attempt 
+const { DatabaseSync } = require("node:sqlite");
+const db = new DatabaseSync('database.db');
+db.exec('PRAGMA journal_mode = WAL;');
+db.exec(`
+  CREATE TABLE IF NOT EXISTS usernames (
+    birthid INTEGER PRIMARY KEY,
+    username TEXT NOT NULL
+  )`);
+
 app.get('/', (req, res) => {
 });
 
