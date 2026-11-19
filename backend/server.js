@@ -11,19 +11,28 @@ const http = require("http"); //keep when integrating
 const server = http.createServer(app); //using app here is where the connection happens
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173"
+        origin: "http://localhost:5173",
+        credentials: true
     }
 });
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-	res.cookie('sesh', 'john doe');
-	console.log('Cookie set');
 });
 
-//when someone connects to server
+//Occurs on server connection attempt.
+io.use((socket, next) => {
+  const rawCookies = socket.handshake.headers.cookie;
+  console.log(rawCookies);
+  if (rawCookies) {
+    socket.data.birth = rawCookies.split("=", 2)[1]; 
+    console.log(socket.data.birth);
+  }
+  next();
+});
+
+//Occurs after successful server connection is established. 
 io.on("connection", (socket) => {
-    console.log("A user connected: " + socket.id);
+    console.log("A socket connected: " + socket.id);
 
     //when a message is sent (users socket)
     socket.on("message", (message) => {
@@ -35,7 +44,7 @@ io.on("connection", (socket) => {
     
     //if someone leaves chat 
     socket.on("disconnect", () => {
-        console.log("A user disconnected: " + socket.id);
+        console.log("A socket disconnected: " + socket.id);
     });
 });
 

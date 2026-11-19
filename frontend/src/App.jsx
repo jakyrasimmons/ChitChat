@@ -9,8 +9,20 @@ import ChatMessages from './components/chatMessages'
 import MessageInput from './components/messageInput'
 import './App.css'
 
+//imports npm cookies lib
+import Cookies from "js-cookie";
+
 //from jesus's index.html
-const socket = io('http://localhost:8080')
+const socket = io('http://localhost:8080', {withCredentials: true})
+
+//DATETIME
+const dt = new Date();
+console.log(dt.toLocaleString());
+console.log(timeStamp(dt));
+function timeStamp(dateObj) {
+    return `${dateObj.getFullYear()}${dateObj.getMonth()+1}${dateObj.getDate()}${dateObj.getHours()}${dateObj.getMinutes()}${dateObj.getSeconds()}`
+}
+//DATETIME
 
 //holds app interface
 function App() {
@@ -18,6 +30,18 @@ function App() {
   //store messages in the chat
   const [messages, setMessages] = useState([])
 
+  if (Cookies.get('birth') === undefined) {
+    const currentTime = timeStamp(dt);
+    Cookies.set('birth', currentTime, { 
+        expires: 7, 
+        secure: true, 
+        sameSite: 'strict' 
+      });
+    console.log(`New cookie set for client.`);
+  }
+  else {
+    console.log(`Cookie already exists for client.`);
+  }
   //store user's display name
   const [displayName, setDisplayName] = useState('')
 
