@@ -42,17 +42,23 @@ function App() {
   else {
     console.log(`Cookie already exists for client.`);
   }
+
   //store user's display name
   const [displayName, setDisplayName] = useState('')
 
   //stores name typed in textbox
   const [nameInput, setNameInput] = useState('')
 
+  socket.on('returning_user', (name) => {
+    console.log("A name matches client's cookie!");
+    setDisplayName(name.username);
+  });
+
   //testing purposes
   console.log(messages)
   console.log('Socket connected:', socket.connected)
   
-  //alistens for messages from the server
+  //listens for messages from the server
   useEffect(() => {
     const handleMessage = (data) => {
 
@@ -77,7 +83,7 @@ function App() {
   //save display name
   const saveDisplayName = () => {
     if (!nameInput.trim()) return
-
+    socket.emit('name_to_try', nameInput.trim());
     setDisplayName(nameInput.trim())
   }
 
@@ -103,30 +109,30 @@ function App() {
 
   //screen that users see when joining the chat
   if (!displayName) {
-  return (
-    <div className="name-setup">
-      <h2>Welcome to ChitChat!</h2>
+    return (
+      <div className="name-setup">
+        <h2>Welcome to ChitChat!</h2>
 
-      {/* asks for a name and sets nameInput variable to it*/}
-      <input
-        type="text"
-        placeholder="Enter your display name"
-        value={nameInput}
-        onChange={(e) => setNameInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            saveDisplayName()
-          }
-        }}
-      />
+        {/* asks for a name and sets nameInput variable to it*/}
+        <input
+          type="text"
+          placeholder="Enter your display name"
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              saveDisplayName()
+            }
+          }}
+        />
 
-      {/* when user clicks "join chat" button it saves the displayname*/}
-      <button onClick={saveDisplayName}>
-        Join Chat
-      </button>
-    </div>
-  )
-}
+        {/* when user clicks "join chat" button it saves the displayname*/}
+        <button onClick={saveDisplayName}>
+          Join Chat
+        </button>
+      </div>
+    )
+  }
 
   //whats displayed on the page (components)
   return (
@@ -135,7 +141,7 @@ function App() {
     <ChatMessages messages={messages} />
     <MessageInput sendMessage={sendMessage} />
   </div>
-)
+  )
 }
 
 //available to other files

@@ -23,8 +23,11 @@ db.exec('PRAGMA journal_mode = WAL;');
 db.exec(`
   CREATE TABLE IF NOT EXISTS usernames (
     birthid INTEGER PRIMARY KEY,
-    username TEXT NOT NULL
+    username TEXT UNIQUE NOT NULL
   )`);
+
+const query = db.prepare('SELECT username FROM usernames WHERE birthid = ?');
+const store = db.prepare('INSERT INTO usernames (birthid, username) VALUES (?, ?)');
 
 app.get('/', (req, res) => {
 });
@@ -43,6 +46,21 @@ io.use((socket, next) => {
 //Occurs after successful server connection is established. 
 io.on("connection", (socket) => {
     console.log("A socket connected: " + socket.id);
+
+    const name = query.get(Number(socket.data.birth));
+    if (name) {
+      socket.emit('returning_user', name);
+    }
+
+    socket.on('name_to_try', (screen_name) => {
+      try {
+        const result = store.run(socket.data.birth, screen_name);
+      } catch (error) {
+        if (error.message.includes('UNIQUE constraint failed')) {
+          socket.emit('name_try_again');
+        }
+      }
+    });
 
     //when a message is sent (users socket)
     socket.on("message", (message) => {
